@@ -13,7 +13,10 @@ public class Auth {
 
     @Data
     public static class SignIn{
+        @NotBlank
         private String username;
+
+        @NotBlank
         private String password;
     }
 
