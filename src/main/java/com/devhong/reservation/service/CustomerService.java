@@ -62,7 +62,8 @@ public class CustomerService {
             throw new CustomException(CustomErrorCode.UNABLE_TO_RESERVATION);
         }
 
-        if (reservationRepository.existsByUserIdAndReservationTime(userId, formattedDateTime)) {
+        if (reservationRepository.existsByUserIdAndStoreIdAndReservationTime(
+                userId, storeId, formattedDateTime)) {
             throw new CustomException(CustomErrorCode.RESERVATION_ALREADY_EXISTS);
         }
 
