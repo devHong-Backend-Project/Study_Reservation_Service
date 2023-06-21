@@ -29,7 +29,6 @@ public class ReservationDto {
                     .user(user)
                     .store(store)
                     .reservationTime(LocalDateTime.parse(reservationTime,formatter))
-                    .reservedAt(LocalDateTime.now())
                     .build();
         }
     }
@@ -43,7 +42,6 @@ public class ReservationDto {
         private String storeName;
         private String location;
         private LocalDateTime reservationTime;
-        private LocalDateTime reservedAt;
 
         public static ReservationResponse fromEntity(Reservation reservation) {
             return ReservationResponse.builder()
@@ -51,7 +49,6 @@ public class ReservationDto {
                     .storeName(reservation.getStore().getStoreName())
                     .location(reservation.getStore().getLocation())
                     .reservationTime(reservation.getReservationTime())
-                    .reservedAt(reservation.getReservedAt())
                     .build();
         }
     }
@@ -68,6 +65,7 @@ public class ReservationDto {
         private String storeName;
         private LocalDateTime reservationTime;
         private boolean isConfirmed;
+        private LocalDateTime confirmedAt;
 
         public static ConfirmResponse fromEntity(Reservation reservation) {
             return ConfirmResponse.builder()
@@ -75,6 +73,27 @@ public class ReservationDto {
                     .storeName(reservation.getStore().getStoreName())
                     .reservationTime(reservation.getReservationTime())
                     .isConfirmed(reservation.isConfirmed())
+                    .confirmedAt(reservation.getReservedAt())
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    public static class CancelResponse{
+        private String userName;
+        private String storeName;
+        private LocalDateTime reservationTime;
+        private boolean isCanceled;
+        private LocalDateTime canceledAt;
+
+        public static CancelResponse fromEntity(Reservation reservation) {
+            return CancelResponse.builder()
+                    .userName(reservation.getUser().getUsername())
+                    .storeName(reservation.getStore().getStoreName())
+                    .reservationTime(reservation.getReservationTime())
+                    .isCanceled(reservation.isCanceled())
+                    .canceledAt(reservation.getCanceledAt())
                     .build();
         }
     }

@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -35,5 +32,11 @@ public class PartnerController {
     public ResponseEntity<?> confirmReservation(@RequestBody ReservationDto.Confirm request){
         Reservation reservation = partnerService.confirmReservation(request);
         return ResponseEntity.ok(ReservationDto.ConfirmResponse.fromEntity(reservation));
+    }
+
+    @PostMapping("/store/cancel/{reservationId}")
+    public ResponseEntity<?> cancelReservation(@PathVariable Long reservationId) {
+        Reservation reservation = partnerService.cancelReservation(reservationId);
+        return ResponseEntity.ok(ReservationDto.CancelResponse.fromEntity(reservation));
     }
 }
