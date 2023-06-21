@@ -28,9 +28,9 @@ public class PartnerController {
         return ResponseEntity.ok(StoreDto.RegistrationResponse.fromEntity(store));
     }
 
-    @PostMapping("/store/confirm")
-    public ResponseEntity<?> confirmReservation(@RequestBody ReservationDto.Confirm request){
-        Reservation reservation = partnerService.confirmReservation(request);
+    @PostMapping("/store/confirm/{reservationId}")
+    public ResponseEntity<?> confirmReservation(@PathVariable Long reservationId){
+        Reservation reservation = partnerService.confirmReservation(reservationId);
         return ResponseEntity.ok(ReservationDto.ConfirmResponse.fromEntity(reservation));
     }
 

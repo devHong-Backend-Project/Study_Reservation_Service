@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     }
 
     /*
-        api 접근 권한 설정으로 요청 제한이 되었을때 에러 핸들링 리스폰스
+        api 접근 권한 설정으로 요청 제한이 되었을때 예외 리스폰스
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
