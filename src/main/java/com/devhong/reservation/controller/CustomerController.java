@@ -1,6 +1,6 @@
 package com.devhong.reservation.controller;
 
-import com.devhong.reservation.dto.StoreDto;
+import com.devhong.reservation.dto.ReservationDto;
 import com.devhong.reservation.model.Reservation;
 import com.devhong.reservation.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +24,9 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping("/store/reserve")
-    public ResponseEntity<?> reserveStore(@RequestBody @Valid StoreDto.Reserve request) {
+    public ResponseEntity<?> reserveStore(@RequestBody @Valid ReservationDto.Reserve request) {
         Reservation reservation = customerService.addReservation(request);
-        return ResponseEntity.ok(StoreDto.ReservationResponse.fromEntity(reservation));
+        return ResponseEntity.ok(ReservationDto.ReservationResponse.fromEntity(reservation));
     }
 
 }

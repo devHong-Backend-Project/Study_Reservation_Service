@@ -1,6 +1,6 @@
 package com.devhong.reservation.service;
 
-import com.devhong.reservation.dto.StoreDto;
+import com.devhong.reservation.dto.ReservationDto;
 import com.devhong.reservation.exception.CustomErrorCode;
 import com.devhong.reservation.exception.CustomException;
 import com.devhong.reservation.model.Reservation;
@@ -34,7 +34,7 @@ public class CustomerService {
         3. 예약하려는 상점 유무 확인
         4. 예약
      */
-    public Reservation addReservation(StoreDto.Reserve reserve) {
+    public Reservation addReservation(ReservationDto.Reserve reserve) {
         validateReservationTime(reserve.getReservationTime());
 
         User user = userRepository.findById(reserve.getUserId())

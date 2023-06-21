@@ -1,6 +1,8 @@
 package com.devhong.reservation.controller;
 
+import com.devhong.reservation.dto.ReservationDto;
 import com.devhong.reservation.dto.StoreDto;
+import com.devhong.reservation.model.Reservation;
 import com.devhong.reservation.model.Store;
 import com.devhong.reservation.service.PartnerService;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +29,11 @@ public class PartnerController {
     public ResponseEntity<?> registerStore(@RequestBody @Valid StoreDto.Registration request) {
         Store store = partnerService.addStore(request);
         return ResponseEntity.ok(StoreDto.RegistrationResponse.fromEntity(store));
+    }
+
+    @PostMapping("/store/confirm")
+    public ResponseEntity<?> confirmReservation(@RequestBody ReservationDto.Confirm request){
+        Reservation reservation = partnerService.confirmReservation(request);
+        return ResponseEntity.ok(ReservationDto.ConfirmResponse.fromEntity(reservation));
     }
 }
