@@ -23,6 +23,8 @@ public class Reservation extends BaseEntity {
     @ManyToOne
     private Store store;
 
+    private LocalDateTime reservationTime;
+
     private LocalDateTime reservedAt;
     private LocalDateTime canceledAt;
 
