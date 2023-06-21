@@ -27,13 +27,13 @@ public class AuthService implements UserDetailsService {
         3. 없으면 비밀번호는 암호화 처리해서 회원가입 계속 진행
         4. request 객체를 Entity객체로 변환 후 DB에 저장(회원가입 완료)
      */
-    public User register(Auth.SignUp request) {
-        if (userRepository.existsByUsername(request.getUsername())){
+    public User register(Auth.SignUp user) {
+        if (userRepository.existsByUsername(user.getUsername())){
             throw new CustomException(CustomErrorCode.USER_ALREADY_EXISTS);
         }
 
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-        return userRepository.save(request.toEntity());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user.toEntity());
     }
 
     /*
@@ -41,15 +41,15 @@ public class AuthService implements UserDetailsService {
         2. 각 상황에 대해 에러 처리
         3. 아이디있고 비밀번호 일치하면 user엔티티 객체 리턴
      */
-    public User authenticate(Auth.SignIn request){
-        User user = userRepository.findByUsername(request.getUsername())
+    public User authenticate(Auth.SignIn user){
+        User userEntity = userRepository.findByUsername(user.getUsername())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(user.getPassword(), userEntity.getPassword())) {
             throw new CustomException(CustomErrorCode.PASSWORD_NOT_MATCH);
         }
 
-        return user;
+        return userEntity;
     }
 
     @Override

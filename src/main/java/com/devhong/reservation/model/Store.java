@@ -10,6 +10,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"storeName", "location"}
+                )
+        }
+)
 public class Store extends BaseEntity {
 
     @Id
