@@ -18,7 +18,7 @@ public class PartnerService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
 
-    public Store resgisterStore(StoreDto.Registration store) {
+    public Store addStore(StoreDto.Registration store) {
         User user = userRepository.findById(store.getUserId())
                 .orElseThrow(()-> new CustomException(CustomErrorCode.USER_NOT_FOUND));
 

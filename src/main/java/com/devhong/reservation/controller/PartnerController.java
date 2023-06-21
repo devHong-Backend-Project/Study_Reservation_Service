@@ -24,8 +24,8 @@ public class PartnerController {
     private final PartnerService partnerService;
 
     @PostMapping("/store/register")
-    public ResponseEntity<?> addStore(@RequestBody @Valid StoreDto.Registration request) {
-        Store store = partnerService.resgisterStore(request);
+    public ResponseEntity<?> registerStore(@RequestBody @Valid StoreDto.Registration request) {
+        Store store = partnerService.addStore(request);
         return ResponseEntity.ok(StoreDto.RegistrationResponse.fromEntity(store));
     }
 }
