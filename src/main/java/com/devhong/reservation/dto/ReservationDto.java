@@ -14,8 +14,8 @@ public class ReservationDto {
 
     @Data
     public static class Reserve{
-        @NotNull
-        private Long userId;
+        @NotBlank
+        private String userName;
 
         @NotNull
         private Long storeId;
@@ -40,6 +40,7 @@ public class ReservationDto {
     @Builder
     public static class ReservationResponse{
         private String userName;
+        private String mobileNumber;
         private String storeName;
         private String location;
         private LocalDateTime reservationTime;
@@ -48,6 +49,7 @@ public class ReservationDto {
         public static ReservationResponse fromEntity(Reservation reservation) {
             return ReservationResponse.builder()
                     .userName(reservation.getUser().getUsername())
+                    .mobileNumber(reservation.getUser().getMobileNumber())
                     .storeName(reservation.getStore().getStoreName())
                     .location(reservation.getStore().getLocation())
                     .reservationTime(reservation.getReservationTime())
