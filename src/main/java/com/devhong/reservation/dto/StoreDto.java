@@ -48,4 +48,22 @@ public class StoreDto {
                     .build();
         }
     }
+
+    @Data
+    @Builder
+    public static class SearchResponse{
+        private Long storeId;
+        private String storeName;
+        private String location;
+        private String description;
+
+        public static SearchResponse fromEntity(Store store){
+            return SearchResponse.builder()
+                    .storeId(store.getId())
+                    .storeName(store.getStoreName())
+                    .location(store.getLocation())
+                    .description(store.getDescription())
+                    .build();
+        }
+    }
 }
