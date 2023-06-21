@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,7 @@ public class PartnerService {
         validateReservation(reservation);
 
         reservation.setConfirmed(true);
+        reservation.setReservedAt(LocalDateTime.now());
 
         return reservationRepository.save(reservation);
     }
@@ -64,5 +67,15 @@ public class PartnerService {
         if (reservation.isCanceled()){
             throw new CustomException(CustomErrorCode.RESERVATION_IS_CANCELED);
         }
+    }
+
+    public Reservation cancelReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.RESERVATION_NOT_FOUND));
+
+        reservation.setCanceled(true);
+        reservation.setCanceledAt(LocalDateTime.now());
+
+        return reservationRepository.save(reservation);
     }
 }
