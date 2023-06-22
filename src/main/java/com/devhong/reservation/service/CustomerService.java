@@ -67,7 +67,7 @@ public class CustomerService {
             throw new CustomException(CustomErrorCode.RESERVATION_ALREADY_EXISTS);
         }
 
-        if (reservationRepository.countByStoreIdAndCanceledAndReservationTime(
+        if (reservationRepository.countByStoreIdAndIsCanceledAndReservationTime(
                 storeId, false, formattedDateTime) >= RESERVATION_LIMIT) {
             throw new CustomException(CustomErrorCode.RESERVATION_IS_FULL);
         }
