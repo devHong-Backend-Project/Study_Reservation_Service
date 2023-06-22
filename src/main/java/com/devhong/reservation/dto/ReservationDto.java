@@ -94,4 +94,21 @@ public class ReservationDto {
                     .build();
         }
     }
+
+    @Data
+    @Builder
+    public static class VisitResponse{
+        private String userName;
+        private LocalDateTime reservationTime;
+        private boolean isVisited;
+
+        public static VisitResponse fromEntity(Reservation reservation) {
+            return VisitResponse.builder()
+                    .userName(reservation.getUser().getUsername())
+                    .reservationTime(reservation.getReservationTime())
+                    .isVisited(reservation.isVisited())
+                    .build();
+        }
+
+    }
 }
