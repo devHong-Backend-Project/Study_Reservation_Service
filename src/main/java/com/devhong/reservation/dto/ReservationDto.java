@@ -56,11 +56,6 @@ public class ReservationDto {
     }
 
     @Data
-    public static class Confirm{
-        private Long reservationId;
-    }
-
-    @Data
     @Builder
     public static class ConfirmResponse{
         private String userName;

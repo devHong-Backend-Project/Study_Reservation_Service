@@ -23,7 +23,7 @@ public class AuthService implements UserDetailsService {
 
     /*
         1. client가 요청보낸 회원가입 정보를 가져와서 이미 가입된 아이디인지 확인
-        2. 이미 있는 아이디면 에러발생
+        2. 이미 있는 아이디면 예외발생
         3. 없으면 비밀번호는 암호화 처리해서 회원가입 계속 진행
         4. request 객체를 Entity객체로 변환 후 DB에 저장(회원가입 완료)
      */
@@ -38,7 +38,7 @@ public class AuthService implements UserDetailsService {
 
     /*
         1. client에서 보내온 로그인 요청을 가져와서 아이디가 존재하는지, 비밀번호는 일치하는지 확인
-        2. 각 상황에 대해 에러 처리
+        2. 각 상황에 대해 예외 처리
         3. 아이디있고 비밀번호 일치하면 user엔티티 객체 리턴
      */
     public User authenticate(Auth.SignIn user){

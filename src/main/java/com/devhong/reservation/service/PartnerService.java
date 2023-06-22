@@ -1,6 +1,5 @@
 package com.devhong.reservation.service;
 
-import com.devhong.reservation.dto.ReservationDto;
 import com.devhong.reservation.dto.StoreDto;
 import com.devhong.reservation.exception.CustomErrorCode;
 import com.devhong.reservation.exception.CustomException;
@@ -26,8 +25,8 @@ public class PartnerService {
 
     /*
         상점 등록하기
-        1. 파트너 회원 찾기 (회원이 없으면 에러발생)
-        2. 상점의 이름과 위치가 같으면 이미 등록된 상점이라고 판단. 에러발생
+        1. 파트너 회원 찾기 (회원이 없으면 예외발생)
+        2. 상점의 이름과 위치가 같으면 이미 등록된 상점이라고 판단. 예외발생
         3. 상점 등록
      */
     public Store addStore(StoreDto.Registration store) {
@@ -43,12 +42,12 @@ public class PartnerService {
 
     /*
         예약 확정하기
-        1. 확정할 예약 불러오기 (예약이 존재하지 않으면 에러 발생)
-        2. validateReservation(이미 확정된 예약인지, 취소된 예약인지 확인 후 에러발생)
+        1. 확정할 예약 불러오기 (예약이 존재하지 않으면 예외 발생)
+        2. validateReservation(이미 확정된 예약인지, 취소된 예약인지 확인 후 예외발생)
         3. 예약 확정
      */
-    public Reservation confirmReservation(ReservationDto.Confirm confirm) {
-        Reservation reservation = reservationRepository.findById(confirm.getReservationId())
+    public Reservation confirmReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.RESERVATION_NOT_FOUND));
 
         validateReservation(reservation);
