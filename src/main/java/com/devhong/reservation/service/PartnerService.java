@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -68,13 +69,85 @@ public class PartnerService {
         }
     }
 
+    /*
+        예약 취소
+        1. 존재하는 예약인지 확인
+        2. 취소 가능한 예약인지 validate(이미 취소된 예약인지, 이미 승인된 예약인지 체크)
+        3. 취소처리 후에 DB에 저장
+     */
     public Reservation cancelReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.RESERVATION_NOT_FOUND));
+
+        validateCancel(reservation);
 
         reservation.setCanceled(true);
         reservation.setCanceledAt(LocalDateTime.now());
 
         return reservationRepository.save(reservation);
+    }
+
+    private void validateCancel(Reservation reservation) {
+        if (reservation.isCanceled()) {
+            throw new CustomException(CustomErrorCode.RESERVATION_IS_CANCELED);
+        }
+
+        if (reservation.isConfirmed()){
+            throw new CustomException(CustomErrorCode.RESERVATION_ALREADY_CONFIRMED);
+        }
+    }
+
+    /*
+        방문확인
+        1. 존재하는 예약인지 확인
+        2. 방문 확인 유효성 validate 체크
+        3. 방문처리 후 DB에 저장
+     */
+    public Reservation checkVisit(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.RESERVATION_NOT_FOUND));
+
+        validateVisit(reservation);
+
+        reservation.setVisited(true);
+
+        return reservationRepository.save(reservation);
+    }
+
+    /*
+        방문 확인 유효성
+        1. 예약시간 10분전에 도착 못하면 방문 확인 불가
+        2. 아직 승인되지 않은 예약은 방문 확인 불가
+        3. 취소된 예약이면 방문 확인 불가
+        4. 이미 방문 처리가 된 예약일때 예외 발생
+     */
+    private void validateVisit(Reservation reservation) {
+        if (LocalDateTime.now().isAfter(reservation.getReservationTime().minusMinutes(10))) {
+            throw new CustomException(CustomErrorCode.UNABLE_TO_CHECK);
+        }
+
+        if (!reservation.isConfirmed()) {
+            throw new CustomException(CustomErrorCode.RESERVATION_NOT_CONFIRMED);
+        }
+
+        if (reservation.isCanceled()) {
+            throw new CustomException(CustomErrorCode.RESERVATION_IS_CANCELED);
+        }
+
+        if (reservation.isVisited()) {
+            throw new CustomException(CustomErrorCode.VISIT_ALREADY_CHECKED);
+        }
+    }
+
+    /*
+        예약 목록 보기
+        1. 예약자 확인. (없는 유저면 예외 발생)
+        2. 예약자명과 상점Id를 통해 예약 조회. 리스트로 리턴
+     */
+    public List<Reservation> getReservations(Long storeId, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+
+        return reservationRepository.findByStoreIdAndUser(storeId, user);
     }
 }

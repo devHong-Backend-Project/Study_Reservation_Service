@@ -12,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -39,4 +41,18 @@ public class PartnerController {
         Reservation reservation = partnerService.cancelReservation(reservationId);
         return ResponseEntity.ok(ReservationDto.CancelResponse.fromEntity(reservation));
     }
+
+    @GetMapping("/store/{storeId}/reservation")
+    public ResponseEntity<?> getReservations(@PathVariable Long storeId, @RequestParam("username") String username) {
+        List<Reservation> reservations = partnerService.getReservations(storeId, username);
+        return ResponseEntity.ok(reservations.stream()
+                .map(ReservationDto.ReservationResponse::fromEntity).collect(Collectors.toList()));
+    }
+
+    @PostMapping("/store/visit/{reservationId}")
+    public ResponseEntity<?> checkVisit(@PathVariable Long reservationId) {
+        Reservation reservation = partnerService.checkVisit(reservationId);
+        return ResponseEntity.ok(ReservationDto.VisitResponse.fromEntity(reservation));
+    }
+
 }

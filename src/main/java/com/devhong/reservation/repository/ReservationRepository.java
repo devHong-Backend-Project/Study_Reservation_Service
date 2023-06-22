@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -15,4 +16,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     int countByStoreIdAndIsCanceledAndReservationTime(Long storeId, boolean canceled, LocalDateTime reservationTime);
 
     boolean existsByUserAndStoreAndIsVisited(User user, Store store, boolean isVisited);
+
+    List<Reservation> findByStoreIdAndUser(Long storeId, User user);
 }
