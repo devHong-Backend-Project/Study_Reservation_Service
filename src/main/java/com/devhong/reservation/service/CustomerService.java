@@ -1,12 +1,15 @@
 package com.devhong.reservation.service;
 
 import com.devhong.reservation.dto.ReservationDto;
+import com.devhong.reservation.dto.ReviewDto;
 import com.devhong.reservation.exception.CustomErrorCode;
 import com.devhong.reservation.exception.CustomException;
 import com.devhong.reservation.model.Reservation;
+import com.devhong.reservation.model.Review;
 import com.devhong.reservation.model.Store;
 import com.devhong.reservation.model.User;
 import com.devhong.reservation.repository.ReservationRepository;
+import com.devhong.reservation.repository.ReviewRepository;
 import com.devhong.reservation.repository.StoreRepository;
 import com.devhong.reservation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ public class CustomerService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    private final ReviewRepository reviewRepository;
 
     /*
         예약하기
@@ -70,6 +74,23 @@ public class CustomerService {
         if (reservationRepository.countByStoreIdAndIsCanceledAndReservationTime(
                 storeId, false, formattedDateTime) >= RESERVATION_LIMIT) {
             throw new CustomException(CustomErrorCode.RESERVATION_IS_FULL);
+        }
+    }
+
+    public Review addReview(ReviewDto.ReviewRequest request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+        Store store = storeRepository.findById(request.getStoreId())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
+
+        validateReview(user, store);
+
+        return reviewRepository.save(request.toEntity(user, store));
+    }
+
+    private void validateReview(User user, Store store) {
+        if (!reservationRepository.existsByUserAndStoreAndIsVisited(user, store, true)) {
+            throw new CustomException(CustomErrorCode.REVIEW_NOT_ALLOWED);
         }
     }
 }

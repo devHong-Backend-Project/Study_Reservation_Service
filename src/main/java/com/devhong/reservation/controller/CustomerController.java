@@ -1,7 +1,9 @@
 package com.devhong.reservation.controller;
 
 import com.devhong.reservation.dto.ReservationDto;
+import com.devhong.reservation.dto.ReviewDto;
 import com.devhong.reservation.model.Reservation;
+import com.devhong.reservation.model.Review;
 import com.devhong.reservation.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,4 +31,9 @@ public class CustomerController {
         return ResponseEntity.ok(ReservationDto.ReservationResponse.fromEntity(reservation));
     }
 
+    @PostMapping("/store/review")
+    public ResponseEntity<?> createReview(@RequestBody @Valid ReviewDto.ReviewRequest request) {
+        Review review = customerService.addReview(request);
+        return ResponseEntity.ok(ReviewDto.ReviewResponse.fromEntity(review));
+    }
 }
