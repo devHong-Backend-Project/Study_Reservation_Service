@@ -22,10 +22,11 @@ public class AuthService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     /*
+        회원 등록
         1. client가 요청보낸 회원가입 정보를 가져와서 이미 가입된 아이디인지 확인
         2. 이미 있는 아이디면 예외발생
-        3. 없으면 비밀번호는 암호화 처리해서 회원가입 계속 진행
-        4. request 객체를 Entity객체로 변환 후 DB에 저장(회원가입 완료)
+        3. 없으면 비밀번호는 암호화 처리 후 setPassword
+        4. SignUpDto 객체를 UserEntity객체로 변환 후 DB에 저장(회원가입 완료)
      */
     public User register(Auth.SignUp user) {
         if (userRepository.existsByUsername(user.getUsername())){
@@ -37,9 +38,9 @@ public class AuthService implements UserDetailsService {
     }
 
     /*
+        로그인
         1. client에서 보내온 로그인 요청을 가져와서 아이디가 존재하는지, 비밀번호는 일치하는지 확인
-        2. 각 상황에 대해 예외 처리
-        3. 아이디있고 비밀번호 일치하면 user엔티티 객체 리턴
+        2. 아이디있고 비밀번호 일치하면 user엔티티 객체 리턴
      */
     public User authenticate(Auth.SignIn user){
         User userEntity = userRepository.findByUsername(user.getUsername())
@@ -52,6 +53,10 @@ public class AuthService implements UserDetailsService {
         return userEntity;
     }
 
+    /*
+        jwt 토큰 바디에 포함되어있는 username으로 UserDetails 객체 가져오는 메서드.
+        클라이언트가 요청시 JwtAuthenticaionFilter에서 토큰 검증과, 권한확인을 하는 과정에서 쓰임.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)

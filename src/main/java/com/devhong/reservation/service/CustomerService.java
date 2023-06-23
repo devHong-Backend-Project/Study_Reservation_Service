@@ -77,6 +77,12 @@ public class CustomerService {
         }
     }
 
+    /*
+        리뷰 추가
+        1. 유저, 상점 유무 확인
+        2. 리뷰를 쓸 수 있는 지 유효성 검증
+        3. 리뷰 DB에 저장, 저장한 Review 엔티티 리턴
+     */
     public Review addReview(ReviewDto.ReviewRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
@@ -88,6 +94,10 @@ public class CustomerService {
         return reviewRepository.save(request.toEntity(user, store));
     }
 
+    /*
+        리뷰 유효성 검증
+        1. 실제 방문을 한 상점인지 확인
+     */
     private void validateReview(User user, Store store) {
         if (!reservationRepository.existsByUserAndStoreAndIsVisited(user, store, true)) {
             throw new CustomException(CustomErrorCode.REVIEW_NOT_ALLOWED);

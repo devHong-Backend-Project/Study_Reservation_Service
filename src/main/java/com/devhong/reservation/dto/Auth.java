@@ -11,6 +11,9 @@ import java.util.List;
 
 public class Auth {
 
+    /*
+        로그인시 클라이언트 request Dto
+     */
     @Data
     public static class SignIn{
         @NotBlank
@@ -20,6 +23,9 @@ public class Auth {
         private String password;
     }
 
+    /*
+        회원가입시 클라이언트 request Dto
+     */
     @Data
     public static class SignUp{
         @NotBlank
@@ -53,6 +59,9 @@ public class Auth {
         }
     }
 
+    /*
+        회원가입 성공시 서버 응답 Dto
+     */
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor

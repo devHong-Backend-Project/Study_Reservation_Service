@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /*
+        커스텀 exception 발생시 핸들러
+     */
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleAccountException(CustomException e) {
         ErrorResponse response = ErrorResponse.builder()
@@ -23,7 +26,7 @@ public class GlobalExceptionHandler {
     }
 
     /*
-        api 접근 권한 설정으로 요청 제한이 되었을때 예외 리스폰스
+        api 접근 권한 설정으로 요청 제한이 되었을때 핸들러
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {

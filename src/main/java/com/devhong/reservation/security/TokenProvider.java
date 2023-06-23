@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60; // 1 hour
+    private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60; // 1 hour 토큰 유효시간
     private static final String KEY_ROLES = "roles";
 
     private final AuthService authService;
@@ -25,8 +25,11 @@ public class TokenProvider {
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
+    /*
+        jwt 토큰 생성
+        jwt 바디에는 username, 토큰발행시간, 토큰만료시간, 유저의 권한들이  들어감
+     */
     public String generateToken(String username, List<String> roles) {
-        //username 같은 경우 원래 Encrypt해서 claim 설정할 필요가 있음.
         Claims claims = Jwts.claims().setSubject(username);
         claims.put(KEY_ROLES, roles);
 
@@ -41,15 +44,27 @@ public class TokenProvider {
                 .compact();
     }
 
+    /*
+        user가 가지고있는 권한들을 Authentication 객체에 주입해서 리턴
+        클라이언트 요청시 JwtAuthenticationFilter에서 사용됨.
+     */
     public Authentication getAuthentication(String jwt) {
         UserDetails userDetails = authService.loadUserByUsername(getUsername(jwt));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    /*
+        토큰의 바디에서 username 추출
+     */
     public String getUsername(String token) {
         return parseClaims(token).getSubject();
     }
 
+    /*
+        토큰 유효성 검증 (클라이언트에서 api 요청시 사용됨)
+        1. 토큰이 헤더에 안실려왔으면 false
+        2. 토큰의 유효시간이 지났으면 false
+     */
     public boolean validateToken(String token) {
         if (!StringUtils.hasText(token)) return false;
 
@@ -57,6 +72,9 @@ public class TokenProvider {
         return !claims.getExpiration().before(new Date());
     }
 
+    /*
+        jwt 토큰의 바디내용 가져오는 메서드
+     */
     private Claims parseClaims(String token) {
         try {
             return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();

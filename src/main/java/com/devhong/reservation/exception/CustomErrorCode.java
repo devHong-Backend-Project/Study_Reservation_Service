@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/*
+    커스텀 exception
+ */
 @Getter
 @AllArgsConstructor
 public enum CustomErrorCode {

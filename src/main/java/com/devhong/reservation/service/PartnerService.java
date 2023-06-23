@@ -87,6 +87,11 @@ public class PartnerService {
         return reservationRepository.save(reservation);
     }
 
+    /*
+        예약 취소 유효성 검증
+        1. 이미 취소된 예약이면 취소 불가
+        2. 이미 예약 승인이 된 예약은 취소 불가.
+     */
     private void validateCancel(Reservation reservation) {
         if (reservation.isCanceled()) {
             throw new CustomException(CustomErrorCode.RESERVATION_IS_CANCELED);

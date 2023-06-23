@@ -12,6 +12,9 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
+/*
+    모든 엔티티에 적용할 base 컬럼
+ */
 @Getter
 @Setter
 @NoArgsConstructor
