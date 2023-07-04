@@ -1,5 +1,6 @@
 package com.devhong.reservation.controller;
 
+import com.devhong.reservation.aop.BeforeSignIn;
 import com.devhong.reservation.dto.Auth;
 import com.devhong.reservation.model.User;
 import com.devhong.reservation.security.TokenProvider;
@@ -32,6 +33,7 @@ public class AuthController {
         2. 아이디, 비밀번호 일치하면 jwt token 발행
         3. 토큰 리스폰스
      */
+    @BeforeSignIn
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody @Valid Auth.SignIn request) {
         User user = authService.authenticate(request);

@@ -1,5 +1,7 @@
 spring:
-#  data:
+#  session:
+#    store-type: redis
+  #  data:
 #    redis:
 #      host: 127.0.0.1
 #      port: 6379
