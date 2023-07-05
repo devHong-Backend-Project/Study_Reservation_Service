@@ -9,8 +9,10 @@ import com.devhong.reservation.model.User;
 import com.devhong.reservation.repository.ReservationRepository;
 import com.devhong.reservation.repository.StoreRepository;
 import com.devhong.reservation.repository.UserRepository;
+import com.devhong.reservation.type.CacheKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -156,5 +158,28 @@ public class PartnerService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
 
         return reservationRepository.findByStoreIdAndUser(storeId, user);
+    }
+
+    /*
+        상점 상세정보 수정하기
+        1. 파트너 확인
+        2. 파트너가 등록한 상점인지 확인
+        3. 상점 상세정보가 업데이트에 성공하면 Redis 캐시에서도 해당 정보 삭제
+     */
+    @CacheEvict(key = "#detail.storeId", value = CacheKey.KEY_STORE_DETAIL, condition = "#result == true")
+    public boolean updateStore(StoreDto.UpdateDetail detail) {
+        try {
+            User user = userRepository.findById(detail.getPartnerId())
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+
+            Store store = storeRepository.findByIdAndUser(detail.getStoreId(), user)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
+
+            storeRepository.save(detail.toUpdateEntity(store));
+            return true;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 }

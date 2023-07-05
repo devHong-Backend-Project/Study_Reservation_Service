@@ -4,8 +4,10 @@ import com.devhong.reservation.exception.CustomErrorCode;
 import com.devhong.reservation.exception.CustomException;
 import com.devhong.reservation.model.Store;
 import com.devhong.reservation.repository.StoreRepository;
+import com.devhong.reservation.type.CacheKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,9 @@ public class BaseService {
     /*
         상점 상세정보 보기
         1. 상점id를 받아와서 그 상점의 상세정보를 보여줌
+        2. 상점의 상제정보는 update가 자주 일어나지 않기 때문에 Redis cache를 활용
      */
+    @Cacheable(key = "#storeId", value = CacheKey.KEY_STORE_DETAIL)
     public Store getDetail(Long storeId) {
         return storeRepository.findById(storeId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));

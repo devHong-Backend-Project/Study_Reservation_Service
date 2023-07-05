@@ -82,4 +82,26 @@ public class StoreDto {
                     .build();
         }
     }
+
+    @Data
+    public static class UpdateDetail {
+        @NotNull
+        private Long partnerId;
+        @NotNull
+        private Long storeId;
+        @NotBlank
+        private String storeName;
+        @NotBlank
+        private String location;
+        @NotBlank
+        private String description;
+
+        public Store toUpdateEntity(Store store) {
+            store.setStoreName(storeName);
+            store.setLocation(location);
+            store.setDescription(description);
+
+            return store;
+        }
+    }
 }

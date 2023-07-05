@@ -2,9 +2,11 @@ package com.devhong.reservation.controller;
 
 import com.devhong.reservation.dto.ReservationDto;
 import com.devhong.reservation.dto.StoreDto;
+import com.devhong.reservation.dto.SuccessDto;
 import com.devhong.reservation.model.Reservation;
 import com.devhong.reservation.model.Store;
 import com.devhong.reservation.service.PartnerService;
+import com.devhong.reservation.type.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +36,15 @@ public class PartnerController {
     public ResponseEntity<?> registerStore(@RequestBody @Valid StoreDto.Registration request) {
         Store store = partnerService.addStore(request);
         return ResponseEntity.ok(StoreDto.RegistrationResponse.fromEntity(store));
+    }
+
+    /*
+        상점 상세정보 수정
+     */
+    @PostMapping("/store/update")
+    public ResponseEntity<?> updateStore(@RequestBody @Valid StoreDto.UpdateDetail request) {
+        partnerService.updateStore(request);
+        return ResponseEntity.ok(SuccessDto.Response.toDto(SuccessCode.SUCCESS_UPDATE_STORE_DETAIL));
     }
 
     /*

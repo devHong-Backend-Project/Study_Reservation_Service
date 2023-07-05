@@ -1,5 +1,6 @@
 package com.devhong.reservation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,6 +30,8 @@ public class Store extends BaseEntity {
 
     private String description;
 
+    @JsonIgnore
     @ManyToOne
     private User user;
+
 }
